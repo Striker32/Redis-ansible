@@ -1,0 +1,80 @@
+- name: Setup Redis + Nginx + PHP demo site
+  hosts: astra
+  become: true
+
+  tasks:
+    - name: Install required packages
+      apt:
+        name:
+          - nginx
+          - php
+          - php-fpm
+          - php-redis
+          - redis-server
+        state: present
+        update_cache: yes
+
+    - name: Copy index.html
+      copy:
+        src: files/index.html
+        dest: /var/www/html/index.html
+        owner: www-data
+        group: www-data
+        mode: '0644'
+
+    - name: Copy set.php
+      copy:
+        src: files/set.php
+        dest: /var/www/html/set.php
+        owner: www-data
+        group: www-data
+        mode: '0644'
+
+    - name: Copy get.php
+      copy:
+        src: files/get.php
+        dest: /var/www/html/get.php
+        owner: www-data
+        group: www-data
+        mode: '0644'
+
+    - name: Copy nginx default
+      copy:
+        src: files/default
+        dest: /etc/nginx/sites-enabled
+        owner: www-data
+        group: www-data
+        mode: '0644'
+      notify: Restart nginx
+
+    - name: Add iptables rule to allow access to port 80 from 192.168.1.103
+      ansible.builtin.shell: |
+        iptables -C INPUT -p tcp --dport 80 -s 192.168.1.103 -j ACCEPT || iptables -A INPUT -p tcp --dport 80 -s 192.168.1.103 -j ACCEPT
+
+    - name: Add iptables rule to drop other access to port 80
+      ansible.builtin.shell: |
+        iptables -C INPUT -p tcp --dport 80 -j DROP|| iptables -A INPUT -p tcp --dport 80 -j DROP
+
+    - name: Add cron job to restore iptables rules on reboot
+      cron:
+        name: "Restore iptables rules at boot"
+        special_time: reboot
+        job: >
+          /sbin/iptables -C INPUT -p tcp --dport 80 -s 192.168.1.103 -j ACCEPT  /sbin/iptables -A INPUT -p tcp --dport 80 -s 192.168.1.103 -j ACCEPT;
+          /sbin/iptables -C INPUT -p tcp --dport 80 -j DROP  /sbin/iptables -A INPUT -p tcp --dport 80 -j DROP
+
+    - name: Ensure services are started
+      systemd:
+        name: "{{ item }}"
+        state: started
+        enabled: yes
+      loop:
+        - redis-server
+        - php7.0-fpm
+        - nginx
+
+  handlers:
+    - name: Restart nginx
+      systemd:
+        name: nginx
+        state: restarted

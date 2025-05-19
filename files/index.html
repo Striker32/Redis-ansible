@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Redis Web Interface</title>
+</head>
+<body>
+  <h1>Redis Web Interface</h1>
+  <form action="set.php" method="POST">
+    <label for="key">Key:</label><br>
+    <input type="text" id="key" name="key"><br><br>
+    <label for="value">Value:</label><br>
+    <input type="text" id="value" name="value"><br><br>
+    <input type="submit" value="Set">
+  </form>
+
+  <br><br>
+
+  <form action="get.php" method="GET">
+    <label for="getkey">Key:</label><br>
+    <input type="text" id="getkey" name="key"><br><br>
+    <input type="submit" value="Get">
+  </form>
+</body>
+</html>
