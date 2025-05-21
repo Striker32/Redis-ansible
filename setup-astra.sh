@@ -45,4 +45,7 @@ sed -i 's/^#\?PermitEmptyPasswords .*/PermitEmptyPasswords yes/' "$SSHD_CONFIG"
 echo "[+] Перезапуск sshd..."
 systemctl restart ssh
 
+echo "[+] Установка пароля для пользователя root..."
+passwd root
+
 echo "[✓] Настройка Astra Linux завершена."
