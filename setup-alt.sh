@@ -20,6 +20,10 @@ systemctl restart network
 
 
 # 2. Настройка SSH
+echo "[+] Обновление списка пакетов и установка SSH-сервера..."
+apt update && apt upgrade -y
+apt install -y openssh-server
+
 SSHD_CONFIG="/etc/openssh/sshd_config"
 echo "[+] Настройка sshd_config..."
 
