@@ -55,7 +55,7 @@ echo "[+] Установка git и ansible..."
 apt-get update && apt-get install -y git ansible
 
 echo "[+] Настройка iptables NAT (MASQUERADE)..."
-iptables -t nat -A POSTROUTING -s 192.168.1.0/24 -o eth0 -j MASQUERADE
+iptables -t nat -A POSTROUTING -s 192.168.1.0/24 -o enp0s8 -j MASQUERADE
 
 echo "[+] Сохранение iptables в /root/rules..."
 iptables-save > /root/rules
