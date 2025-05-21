@@ -31,6 +31,9 @@ systemctl restart networking
 
 
 # 2. Настройка SSH
+echo "[+] Установка SSH"
+apt-get update && apt-get install ssh
+
 echo "[+] Настройка sshd_config..."
 SSHD_CONFIG="/etc/ssh/sshd_config"
 
