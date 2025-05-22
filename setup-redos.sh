@@ -35,6 +35,9 @@ chmod 600 "$NM_CONF_PATH"
 echo "[+] Перезапуск NetworkManager..."
 systemctl restart NetworkManager
 
+echo "[+] Создание /etc/resolv.conf..."
+echo "192.168.1.102 astra.redis" >> /etc/hosts
+
 
 # 2. Настройка SSH
 echo "[+] Настройка sshd_config..."
