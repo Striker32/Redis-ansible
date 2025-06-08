@@ -78,7 +78,6 @@
       systemd:
         name: nginx
         state: restarted
-      notify: Restart php-fpm
 
     - name: Restart php-fpm
       systemd:
